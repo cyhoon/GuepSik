@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 
 URL = "http://www.dgsw.hs.kr/user/carte/list.do?menuCd=&startDate=2018-02-04&endDate=2018-02-10"
 
+
 class Guepsik:
     def __init__(self):
         # tr,td는 인덱스가 1부터 시작함(일요일~토요일), 하지만 datetime.today().weekday는 월요일이 0
@@ -29,7 +30,6 @@ class Guepsik:
         food = soup.select(
             "tbody > tr:nth-of-type(%d) > td:nth-of-type(%d)" %
             (meal_code, self.index))[0].text.split()
-        print(food)
         return food
 
     def data_processing(self):
@@ -40,7 +40,15 @@ class Guepsik:
         breakfast = self.food_processing(soup, 2)
         lunch = self.food_processing(soup, 3)
         dinner = self.food_processing(soup, 4)
+        today_meal_service = {
+            "breakfast": breakfast,
+            "lunch": lunch,
+            "dinner": dinner}
+        return today_meal_service
 
 
 if __name__ == '__main__':
-    Guepsik().data_processing()
+    DATA = Guepsik().data_processing()
+    print("아침 : " + str(DATA['breakfast']))
+    print("점심 : " + str(DATA['lunch']))
+    print("저녁 : " + str(DATA['dinner']))
